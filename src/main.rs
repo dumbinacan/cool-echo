@@ -13,10 +13,11 @@ fn cool_println(message: String) {
     let chars = message.chars();
     // TODO make sure copy contains empty string
     //      before pushing
-    let mut copy = String::new();
+    let mut copy = Vec::<char>::new();
     for c in chars {
+        // running into ownership problems
         for lowercase in 'a'..'z' {
-            print!("{}", copy);
+            printvec(copy);
             println!("{}", lowercase);
             if c == lowercase {
                 copy.push(lowercase);
@@ -25,7 +26,7 @@ fn cool_println(message: String) {
         }
         if c.is_lowercase() { break; }
         for uppercase in 'A'..'Z' {
-            print!("{}", copy);
+            printvec(copy);
             println!("{}", uppercase);
             if c == uppercase {
                 copy.push(uppercase);
@@ -34,6 +35,7 @@ fn cool_println(message: String) {
         }
         if c.is_uppercase() { break; }
         for number in '0'..'9' {
+            printvec(copy);
             println!("{}", number);
             if c == number {
                 copy.push(number);
@@ -44,5 +46,11 @@ fn cool_println(message: String) {
         // TODO special chars for now just add it to the String and
         // print it on the screen
         println!("{}\n We hit the bottom of loop next char please!", c);
+    }
+}
+
+fn printvec(vecky: Vec::<char>) {
+    for element in vecky {
+        print!("{}", element);
     }
 }
