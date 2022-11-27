@@ -1,56 +1,33 @@
 use std::env;
+use std::{thread,time};
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
-    for arg in args {
-        cool_println(arg);
-    }
-}
+    let argv: Vec<String> = env::args().collect();
+    let mut argc: usize = 1; // print out previous argv
 
-fn cool_println(message: String) {
-    // I can't do this in chars. I need to build a String
-    // that I can modify and grow into the message.
-    let chars = message.chars();
-    // TODO make sure copy contains empty string
-    //      before pushing
-    let mut copy = Vec::<char>::new();
-    for c in chars {
-        // running into ownership problems
-        for lowercase in 'a'..'z' {
-            printvec(copy);
-            println!("{}", lowercase);
-            if c == lowercase {
-                copy.push(lowercase);
-                break;
-            }
-        }
-        if c.is_lowercase() { break; }
-        for uppercase in 'A'..'Z' {
-            printvec(copy);
-            println!("{}", uppercase);
-            if c == uppercase {
-                copy.push(uppercase);
-                break;
-            }
-        }
-        if c.is_uppercase() { break; }
-        for number in '0'..'9' {
-            printvec(copy);
-            println!("{}", number);
-            if c == number {
-                copy.push(number);
-                break;
-            }
-        }
-        if c.is_numeric() { break; }
-        // TODO special chars for now just add it to the String and
-        // print it on the screen
-        println!("{}\n We hit the bottom of loop next char please!", c);
-    }
-}
+    for arg in &argv[1..] {
+        let chars = arg.chars();
+        let mut pos: usize = 0; // keep track of which character your on
 
-fn printvec(vecky: Vec::<char>) {
-    for element in vecky {
-        print!("{}", element);
+        // each character of the given arg
+        for c in chars {
+
+            // print through all chars as we echo
+            for i in 32..126 {
+                let ichar: char = char::from_u32(i).unwrap();
+                // print previous args
+                for arg in &argv[1..argc] { eprint!("{} ", arg) }
+                eprintln!("{}{}", &arg.as_str()[0..pos], ichar);
+                thread::sleep(time::Duration::from_millis(5));
+                if c == ichar { pos += 1; break; }
+            }
+
+        }
+
+        // include the printed arg 
+        argc += 1;
     }
+
+    for arg in &argv[1..argv.len()] { print!("{} ", arg) }
+    println!();
 }
